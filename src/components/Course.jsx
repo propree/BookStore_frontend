@@ -11,6 +11,7 @@ function Course() {
   useEffect(() => {
     const getBook = async () => {
       try {
+        // Full URL used here to avoid relative path issues
         const res = await axios.get(
           "https://bookstore-backend-ente.onrender.com/book"
         );
