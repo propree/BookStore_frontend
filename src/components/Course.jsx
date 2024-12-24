@@ -1,28 +1,38 @@
 import React, { useEffect, useState } from "react";
-import Cards from "./Cards";
+import Cards from "./Cards"; // Ensure this component exists
 import axios from "axios";
 import { Link } from "react-router-dom";
+
 function Course() {
   const [book, setBook] = useState([]);
+  const [loading, setLoading] = useState(true); // Added loading state
+  const [error, setError] = useState(null); // Added error state
+
   useEffect(() => {
     const getBook = async () => {
       try {
-        const res = await axios.get("https://bookstore-backend-ente.onrender.com/book");
+        const res = await axios.get(
+          "https://bookstore-backend-ente.onrender.com/book"
+        );
         console.log(res);
         setBook(res.data);
       } catch (error) {
-        console.log(error);
+        console.error("Error fetching books:", error);
+        setError("Failed to load books. Please try again.");
+      } finally {
+        setLoading(false); // Ensure loading stops
       }
     };
     getBook();
   }, []);
+
   return (
     <>
-      <div className=" max-w-screen-2xl container mx-auto md:px-20 px-4">
+      <div className="max-w-screen-2xl container mx-auto md:px-20 px-4">
         <div className="mt-28 items-center justify-center text-center">
-          <h1 className="text-2xl  md:text-4xl">
+          <h1 className="text-2xl md:text-4xl">
             We're delighted to have you{" "}
-            <span className="text-pink-500"> Here! :)</span>
+            <span className="text-pink-500">Here! :)</span>
           </h1>
           <p className="mt-12">
             Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro,
@@ -39,11 +49,18 @@ function Course() {
             </button>
           </Link>
         </div>
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-4">
-          {book.map((item) => (
-            <Cards key={item.id} item={item} />
-          ))}
-        </div>
+
+        {loading ? (
+          <div className="text-center mt-12">Loading books...</div>
+        ) : error ? (
+          <div className="text-center mt-12 text-red-500">{error}</div>
+        ) : (
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-4 gap-6">
+            {book.map((item) => (
+              <Cards key={item.id || item._id} item={item} />
+            ))}
+          </div>
+        )}
       </div>
     </>
   );
