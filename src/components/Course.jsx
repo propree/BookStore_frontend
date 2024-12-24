@@ -12,6 +12,8 @@ function Course() {
     const getBook = async () => {
       try {
         // Full URL used here to avoid relative path issues
+
+        console.log("dwjjdwj");
         const res = await axios.get(
           "https://bookstore-backend-ente.onrender.com/book"
         );
